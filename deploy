@@ -9,7 +9,7 @@ fi
 gitref=$(git rev-parse --short HEAD)
 echo Proceed $gitref
 
-docker build . -t cruz82/echoserver:$gitref -t cruz82/echoserver:latest
+docker build . -t cruz82/http-echo:$gitref -t cruz82/http-echo:latest
 
-docker push cruz82/echoserver:$gitref
-docker push cruz82/echoserver:latest
+docker push cruz82/http-echo:$gitref
+docker push cruz82/http-echo:latest
