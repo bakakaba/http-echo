@@ -10,3 +10,5 @@ gitref=$(git rev-parse --short HEAD)
 echo Proceed $gitref
 
 docker build . -t cruz82/echoserver:$gitref -t cruz82/echoserver:latest
+
+docker push cruz82/echoserver:$gitref -t cruz82/echoserver:latest
