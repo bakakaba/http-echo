@@ -1,5 +1,6 @@
 from functools import partial
 from http import HTTPStatus
+from sys import stdout
 from http.server import BaseHTTPRequestHandler
 
 BUFFER_SIZE = 1024 * 64
@@ -49,3 +50,5 @@ class EchoHandler(BaseHTTPRequestHandler):
             self.wfile.flush()
         except BrokenPipeError:
             print('Connection terminated before send completed.')
+        finally:
+            stdout.flush()
