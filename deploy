@@ -1,0 +1,9 @@
+#! /bin/bash
+
+if ! git diff-index --quiet HEAD
+then
+    echo "There are uncommitted changes, can't proceed."
+    exit 1
+fi
+
+echo Proceed
