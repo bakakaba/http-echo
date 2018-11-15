@@ -6,4 +6,7 @@ then
     exit 1
 fi
 
-echo Proceed
+gitref=$(git rev-parse --short HEAD)
+echo Proceed $gitref
+
+docker build . -t cruz82/echoserver:$gitref -t cruz82/echoserver:latest
