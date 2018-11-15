@@ -1,6 +1,5 @@
-FROM alpine
+FROM python:3-alpine
 
-RUN apk add --no-cache python3
 COPY echoserver /srv/echoserver
 
 EXPOSE 8000

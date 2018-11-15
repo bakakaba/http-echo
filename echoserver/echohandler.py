@@ -2,7 +2,6 @@ from functools import partial
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler
 
-
 BUFFER_SIZE = 1024 * 64
 
 
@@ -22,23 +21,31 @@ class EchoHandler(BaseHTTPRequestHandler):
             self.send_error(HTTPStatus.REQUEST_URI_TOO_LONG)
             return
         if not self.raw_requestline:
-            self.close_connection = True
             return
         if not self.parse_request():
             return
-        self.send_response(200)
-        self.end_headers()
 
-        self.wfile
-        self.wfile.write(bytes(str(self.headers), 'utf-8'))
+        response = self.raw_requestline
+        response += bytes(str(self.headers), 'utf-8')
+        try:
+            length = int(self.headers.get('content-length') or 0)
 
-        remaining = int(self.headers.get('content-length'))
-        while True:
-            if remaining <= 0:
-                break
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/plain')
+            self.send_header('Content-Length', len(response) + length)
+            self.end_headers()
 
-            buf = BUFFER_SIZE if remaining > BUFFER_SIZE else remaining
-            self.wfile.write(self.rfile.read(buf))
-            remaining -= buf
+            self.wfile.write(response)
+            if length:
+                remaining = length
+                while True:
+                    if remaining <= 0:
+                        break
 
-        self.wfile.flush()
+                    buf = BUFFER_SIZE if remaining > BUFFER_SIZE else remaining
+                    self.wfile.write(self.rfile.read(buf))
+                    remaining -= buf
+
+            self.wfile.flush()
+        except BrokenPipeError:
+            print('Connection terminated before send completed.')
